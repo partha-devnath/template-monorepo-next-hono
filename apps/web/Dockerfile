@@ -1,14 +1,12 @@
-# Stage 1: Install dependencies
-FROM oven/bun:1.3.5 AS base
+FROM oven/bun:1 AS base
 WORKDIR /app
 
 COPY package.json bun.lock turbo.json tsconfig.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/ ./packages/
 
-RUN bun install --frozen-lockfile
+RUN bun install
 
-# Stage 2: Build
 FROM base AS builder
 WORKDIR /app
 COPY . .
@@ -17,8 +15,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV STANDALONE=1
 RUN bun --cwd apps/web run build
 
-# Stage 3: Production runner
-FROM oven/bun:1.3.5-slim AS runner
+FROM oven/bun:1-slim AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

@@ -1,17 +1,17 @@
-FROM oven/bun:1.3.5 AS base
+FROM oven/bun:1 AS base
 WORKDIR /app
 
 COPY package.json bun.lock turbo.json tsconfig.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/ ./packages/
 
-RUN bun install --frozen-lockfile
+RUN bun install
 
 COPY . .
 
 RUN bun --cwd apps/api run build
 
-FROM oven/bun:1.3.5-slim AS runner
+FROM oven/bun:1-slim AS runner
 WORKDIR /app
 
 COPY --from=base /app/apps/api/dist ./dist
