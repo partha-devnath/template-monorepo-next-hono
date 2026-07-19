@@ -19,7 +19,7 @@
     "@workspace/files": "workspace:*",
     "@workspace/logger": "workspace:*",
     "@workspace/schemas": "workspace:*",
-    "drizzle-orm": "^0.43.0",
+    "drizzle-orm": "^0.45.2",
     "hono": "^4.8.0",
     "zod": "^4.4.3"
   },
