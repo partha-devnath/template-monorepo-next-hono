@@ -2,7 +2,10 @@ import postgres from "postgres"
 import { drizzle } from "drizzle-orm/postgres-js"
 import * as schema from "@workspace/schemas"
 
-const connectionString = process.env.DATABASE_URL!
+const connectionString = process.env.DATABASE_URL
+if (!connectionString) {
+  throw new Error("DATABASE_URL environment variable is required")
+}
 
 const client = postgres(connectionString, {
   prepare: false,

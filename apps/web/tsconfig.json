@@ -26,9 +26,7 @@
       "@workspace/schemas/*": ["../../packages/schemas/src/*"],
       "@workspace/schemas": ["../../packages/schemas/src"],
       "@workspace/db": ["../../packages/db/src"],
-      "@workspace/auth": ["../../packages/auth/src"],
-      "@workspace/email": ["../../packages/email/src"],
-      "@workspace/files": ["../../packages/files/src"]
+      "@workspace/auth": ["../../packages/auth/src"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

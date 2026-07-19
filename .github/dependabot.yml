@@ -1,0 +1,24 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+    groups:
+      dev-deps:
+        patterns:
+          - "@commitlint/*"
+          - "eslint*"
+          - "typescript*"
+          - "vitest*"
+          - "prettier*"
+      react-deps:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      next-deps:
+        patterns:
+          - "next*"
+          - "@next/*"

@@ -5,6 +5,7 @@ import "@workspace/ui/globals.css"
 export const metadata: Metadata = {
   title: "template-monorepo-next-hono",
   description: "Full-stack monorepo with Next.js, Hono, Better Auth, Drizzle",
+  icons: [{ url: "/favicon.svg", type: "image/svg+xml" }],
 }
 
 export default function RootLayout({
