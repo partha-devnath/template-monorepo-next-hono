@@ -58,12 +58,18 @@ app.use("*", async (c, next) => {
 app.use(
   "*",
   factory.createMiddleware(async (c, next) => {
-    const info = getConnInfo(c)
+    let remote: string | undefined = "unknown"
+    try {
+      const info = getConnInfo(c)
+      remote = info.remote.address
+    } catch {
+      // getConnInfo requires Bun server env, not available in tests
+    }
     const requestId = crypto.randomUUID()
     c.set("requestId", requestId)
     c.header("X-Request-Id", requestId)
     logger.info(
-      { remote: info.remote, requestId },
+      { remote, requestId },
       `${c.req.method} ${c.req.path}`
     )
     await next()
@@ -74,8 +80,14 @@ const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
 
 function rateLimiter(maxRequests: number, windowMs: number) {
   return createMiddleware(async (c, next) => {
-    const info = getConnInfo(c)
-    const key = info.remote.address ?? "unknown"
+    let address: string | undefined = "unknown"
+    try {
+      const info = getConnInfo(c)
+      address = info.remote.address
+    } catch {
+      // getConnInfo requires Bun server env, not available in tests
+    }
+    const key = address ?? "unknown"
     const now = Date.now()
 
     const entry = rateLimitStore.get(key)
@@ -128,7 +140,10 @@ app.use(
 
 app.use("/api/auth/*", rateLimiter(30, 60_000))
 
-app.on(["POST", "GET"], "/api/auth/**", (c) => auth.handler(c.req.raw))
+app.all("/api/auth/:all{.*}", async (c) => {
+  const res = await auth.handler(c.req.raw)
+  return res
+})
 
 app.get("/api/health", async (c) => {
   try {

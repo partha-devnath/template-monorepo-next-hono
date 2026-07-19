@@ -1,7 +1,6 @@
 import { createLogger } from "@workspace/logger/browser"
 
 const logger = createLogger("api-client")
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"
 
 type RequestOptions = {
   method?: string
@@ -30,7 +29,7 @@ export async function apiClient<T = unknown>(
     fetchOptions.cache = cache
   }
 
-  const response = await fetch(`${API_URL}${path}`, fetchOptions)
+  const response = await fetch(path, fetchOptions)
   const data = await response.json()
 
   if (!response.ok) {

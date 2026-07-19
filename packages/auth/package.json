@@ -8,12 +8,13 @@
     "lint": "eslint",
     "format": "prettier --write \"**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest"
   },
   "dependencies": {
     "@workspace/db": "workspace:*",
     "@workspace/email": "workspace:*",
+    "@workspace/logger": "workspace:*",
     "@workspace/schemas": "workspace:*",
     "better-auth": "^1.2.0"
   },

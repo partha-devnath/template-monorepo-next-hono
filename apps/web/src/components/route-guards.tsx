@@ -1,6 +1,6 @@
 "use client"
 
-import { type ReactNode } from "react"
+import { type ReactNode, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "@/lib/auth-client"
 
@@ -8,17 +8,18 @@ export function ProtectedLayout({ children }: { children: ReactNode }) {
   const router = useRouter()
   const { data: session, isPending } = useSession()
 
-  if (isPending) {
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.push("/login")
+    }
+  }, [isPending, session, router])
+
+  if (isPending || !session) {
     return (
       <div className="flex min-h-svh items-center justify-center">
         <p className="text-muted-foreground">Loading...</p>
       </div>
     )
-  }
-
-  if (!session) {
-    router.push("/login")
-    return null
   }
 
   return <>{children}</>
@@ -27,6 +28,12 @@ export function ProtectedLayout({ children }: { children: ReactNode }) {
 export function PublicLayout({ children }: { children: ReactNode }) {
   const router = useRouter()
   const { data: session, isPending } = useSession()
+
+  useEffect(() => {
+    if (!isPending && session) {
+      router.push("/dashboard")
+    }
+  }, [isPending, session, router])
 
   if (isPending) {
     return (
@@ -37,7 +44,6 @@ export function PublicLayout({ children }: { children: ReactNode }) {
   }
 
   if (session) {
-    router.push("/dashboard")
     return null
   }
 

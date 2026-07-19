@@ -10,5 +10,5 @@ export const {
   resetPassword,
   verifyEmail,
 } = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001",
+  baseURL: "http://localhost:3000",
 })

@@ -67,7 +67,11 @@ export function ThemeProvider({
     return isTheme(storedTheme) ? storedTheme : defaultTheme
   })
 
-  const [mounted, setMounted] = React.useState(false)
+  const mounted = React.useSyncExternalStore(
+    React.useCallback(() => () => {}, []),
+    () => true,
+    () => false,
+  )
 
   const setTheme = React.useCallback(
     (nextTheme: Theme) => {
@@ -94,9 +98,6 @@ export function ThemeProvider({
     [disableTransitionOnChange]
   )
 
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
 
   React.useEffect(() => {
     applyTheme(theme)

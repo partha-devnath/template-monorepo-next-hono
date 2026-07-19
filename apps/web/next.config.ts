@@ -1,7 +1,7 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output: process.env.STANDALONE ? "standalone" : undefined,
   transpilePackages: [
     "@workspace/ui",
     "@workspace/schemas",
@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
       },
     ],
+  },
+  async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001"
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${apiUrl}/api/:path*`,
+      },
+    ]
   },
   async redirects() {
     return [

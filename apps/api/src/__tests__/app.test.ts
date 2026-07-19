@@ -4,8 +4,7 @@ describe("app", () => {
   it("health endpoint returns ok", async () => {
     const appModule = await import("../app")
     const app = appModule.default
-    const req = new Request("http://localhost/api/health")
-    const res = await app.fetch(req)
+    const res = await app.request("/api/health")
     expect(res.status).toBe(200)
     const body = (await res.json()) as {
       success: boolean
@@ -18,8 +17,7 @@ describe("app", () => {
   it("protected endpoint returns 401 without session", async () => {
     const appModule = await import("../app")
     const app = appModule.default
-    const req = new Request("http://localhost/api/protected")
-    const res = await app.fetch(req)
+    const res = await app.request("/api/protected")
     expect(res.status).toBe(401)
   })
 })

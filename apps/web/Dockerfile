@@ -14,6 +14,7 @@ WORKDIR /app
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV STANDALONE=1
 RUN bun --cwd apps/web run build
 
 # Stage 3: Production runner
