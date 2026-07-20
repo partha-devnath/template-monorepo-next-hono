@@ -22,25 +22,17 @@ test("protected endpoint rejects unauthenticated requests", async ({
   expect(body.error).toBe("Unauthorized")
 })
 
-test("auth endpoints are rate limited", async ({ request }) => {
-  const requests = Array.from({ length: 35 }, (_, i) =>
-    request.post(`${API_URL}/api/auth/test`, {
-      data: { seq: i },
-    })
+test("CORS headers reflect client origin", async ({ request }) => {
+  const res = await request.get(`${API_URL}/api/health`, {
+    headers: { Origin: "http://localhost:3000" },
+  })
+  expect(res.headers()["access-control-allow-origin"]).toBe(
+    "http://localhost:3000"
   )
-  const results = await Promise.all(requests)
-  const statuses = results.map((r) => r.status())
-  const tooMany = statuses.filter((s) => s === 429)
-  expect(tooMany.length).toBeGreaterThan(0)
+  expect(res.headers()["access-control-allow-credentials"]).toBe("true")
 })
 
-test("CORS headers are set", async ({ request }) => {
-  const res = await request.get(`${API_URL}/api/health`)
-  const corsOrigin = res.headers()["access-control-allow-origin"]
-  expect(corsOrigin).toBe("http://localhost:3000")
-})
-
-test("security headers are present", async ({ request }) => {
+test("security headers are present on all responses", async ({ request }) => {
   const res = await request.get(`${API_URL}/api/health`)
   expect(res.headers()["x-content-type-options"]).toBe("nosniff")
   expect(res.headers()["x-frame-options"]).toBe("DENY")

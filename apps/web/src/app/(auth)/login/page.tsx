@@ -59,7 +59,7 @@ export default function LoginPage() {
           <CardDescription>Enter your credentials to continue</CardDescription>
         </CardHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form noValidate onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {error && (
               <div className="rounded-lg border border-destructive/20 bg-destructive/10 px-4 py-2 text-sm text-destructive">

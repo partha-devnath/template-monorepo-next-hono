@@ -9,9 +9,7 @@ const logger = createLogger("auth")
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3001",
-  trustedOrigins: [
-    process.env.CLIENT_URL ?? "http://localhost:3000",
-  ],
+  trustedOrigins: [process.env.CLIENT_URL ?? "http://localhost:3000"],
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: {
@@ -25,6 +23,23 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: true,
     autoSignIn: true,
+    sendResetPassword: async ({
+      user,
+      url,
+      token,
+    }: {
+      user: { id: string; email: string }
+      url: string
+      token: string
+    }) => {
+      const clientUrl = process.env.CLIENT_URL ?? "http://localhost:3000"
+      const resetUrl = `${clientUrl}/reset-password?token=${token}`
+      logger.info({ userId: user.id }, "Sending reset password email")
+      await emailSender.sendResetPasswordEmail({
+        email: user.email,
+        url: resetUrl,
+      })
+    },
   },
   emailVerification: {
     sendOnSignUp: true,
@@ -43,26 +58,6 @@ export const auth = betterAuth({
         : url
       logger.info({ userId: user.id }, "Sending verification email")
       await emailSender.sendVerificationEmail({
-        email: user.email,
-        url: redirectUrl,
-      })
-    },
-  },
-  resetPassword: {
-    sendResetPasswordEmail: async ({
-      user,
-      url,
-    }: {
-      user: { id: string; email: string }
-      url: string
-    }) => {
-      const clientUrl = process.env.CLIENT_URL ?? "http://localhost:3000"
-      const token = new URL(url).searchParams.get("token")
-      const redirectUrl = token
-        ? `${clientUrl}/reset-password?token=${token}`
-        : url
-      logger.info({ userId: user.id }, "Sending reset password email")
-      await emailSender.sendResetPasswordEmail({
         email: user.email,
         url: redirectUrl,
       })
