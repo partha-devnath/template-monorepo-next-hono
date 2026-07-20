@@ -7,7 +7,6 @@ import { createLogger } from "@workspace/logger"
 import { db } from "@workspace/db"
 import { file as fileSchema } from "@workspace/schemas"
 import { createS3Storage, uploadFile } from "@workspace/files"
-import { validateEnv } from "./env"
 
 type Env = {
   Variables: {
@@ -17,8 +16,6 @@ type Env = {
 
 const factory = createFactory<Env>()
 const logger = createLogger("api")
-
-const env = validateEnv()
 
 const defaultCSP = [
   "default-src 'self'",
@@ -30,7 +27,7 @@ const defaultCSP = [
   "frame-ancestors 'none'",
 ].join("; ")
 
-const cspDirectives = env.CSP_DIRECTIVES ?? defaultCSP
+const cspDirectives = process.env.CSP_DIRECTIVES ?? defaultCSP
 
 const storage = createS3Storage({
   bucket: process.env.S3_BUCKET ?? "template",

@@ -9,7 +9,6 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3000",
-    apiURL: process.env.E2E_API_URL ?? "http://localhost:3001",
     trace: "on-first-retry",
   },
   projects: [
