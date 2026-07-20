@@ -15,8 +15,6 @@ FROM oven/bun:1-slim AS runner
 WORKDIR /app
 
 COPY --from=base /app/apps/api/dist ./dist
-COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/packages ./packages
 
 EXPOSE 3001
 CMD ["bun", "dist/index.js"]

@@ -9,11 +9,17 @@ RUN bun install
 
 FROM base AS builder
 WORKDIR /app
-COPY . .
+
+COPY apps/web/src ./apps/web/src
+COPY apps/web/next.config.ts ./apps/web/
+COPY apps/web/tsconfig.json ./apps/web/
+COPY apps/web/postcss.config.mjs ./apps/web/
+COPY apps/web/public ./apps/web/public
+COPY apps/web/components.json ./apps/web/
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV STANDALONE=1
-RUN bun --cwd apps/web run build
+RUN cd apps/web && bun run build
 
 FROM oven/bun:1-slim AS runner
 WORKDIR /app
