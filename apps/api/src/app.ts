@@ -7,6 +7,7 @@ import { createLogger } from "@workspace/logger"
 import { db } from "@workspace/db"
 import { file as fileSchema } from "@workspace/schemas"
 import { createS3Storage, uploadFile } from "@workspace/files"
+import { validateEnv } from "./env"
 
 type Env = {
   Variables: {
@@ -16,6 +17,20 @@ type Env = {
 
 const factory = createFactory<Env>()
 const logger = createLogger("api")
+
+const env = validateEnv()
+
+const defaultCSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' https: data:",
+  "connect-src 'self' https:",
+  "frame-ancestors 'none'",
+].join("; ")
+
+const cspDirectives = env.CSP_DIRECTIVES ?? defaultCSP
 
 const storage = createS3Storage({
   bucket: process.env.S3_BUCKET ?? "template",
@@ -49,10 +64,7 @@ app.use("*", async (c, next) => {
     "Strict-Transport-Security",
     "max-age=31536000; includeSubDomains"
   )
-  c.res.headers.set(
-    "Content-Security-Policy",
-    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'"
-  )
+  c.res.headers.set("Content-Security-Policy", cspDirectives)
 })
 
 app.use(
@@ -68,10 +80,7 @@ app.use(
     const requestId = crypto.randomUUID()
     c.set("requestId", requestId)
     c.header("X-Request-Id", requestId)
-    logger.info(
-      { remote, requestId },
-      `${c.req.method} ${c.req.path}`
-    )
+    logger.info({ remote, requestId }, `${c.req.method} ${c.req.path}`)
     await next()
   })
 )

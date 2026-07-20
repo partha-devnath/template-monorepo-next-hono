@@ -20,6 +20,7 @@ const envSchema = z.object({
   S3_SECRET_ACCESS_KEY: z.string().optional(),
   S3_BUCKET: z.string().default("template"),
   S3_BASE_URL: z.string().optional(),
+  CSP_DIRECTIVES: z.string().optional(),
 })
 
 export function validateEnv() {

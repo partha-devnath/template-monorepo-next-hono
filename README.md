@@ -4,19 +4,19 @@ Production-ready full-stack monorepo template using **Bun**, **Next.js 15**, **R
 
 ## Stack
 
-| Layer         | Technology                                                                                    |
-| ------------- | --------------------------------------------------------------------------------------------- |
-| Runtime       | [Bun](https://bun.sh)                                                                         |
+| Layer         | Technology                                                                                            |
+| ------------- | ----------------------------------------------------------------------------------------------------- |
+| Runtime       | [Bun](https://bun.sh)                                                                                 |
 | Frontend      | [Next.js 15](https://nextjs.org) + [React 19](https://react.dev) + [shadcn/ui](https://ui.shadcn.com) |
-| Backend       | [Hono](https://hono.dev)                                                                      |
-| Auth          | [Better Auth](https://better-auth.com) — email/password, email verification, password reset   |
-| Database      | [PostgreSQL](https://postgresql.org) + [Drizzle ORM](https://orm.drizzle.team)                |
-| Forms         | [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev)                       |
-| Data Fetching | [TanStack React Query](https://tanstack.com/query)                                            |
-| State         | [Zustand](https://zustand-demo.pmnd.rs)                                                       |
-| Logging       | [Winston](https://github.com/winstonjs/winston) + browser console                             |
-| Monorepo      | [Turborepo](https://turbo.build/repo)                                                         |
-| Styling       | [Tailwind CSS v4](https://tailwindcss.com)                                                    |
+| Backend       | [Hono](https://hono.dev)                                                                              |
+| Auth          | [Better Auth](https://better-auth.com) — email/password, email verification, password reset           |
+| Database      | [PostgreSQL](https://postgresql.org) + [Drizzle ORM](https://orm.drizzle.team)                        |
+| Forms         | [React Hook Form](https://react-hook-form.com) + [Zod](https://zod.dev)                               |
+| Data Fetching | [TanStack React Query](https://tanstack.com/query)                                                    |
+| State         | [Zustand](https://zustand-demo.pmnd.rs)                                                               |
+| Logging       | [Winston](https://github.com/winstonjs/winston) + browser console                                     |
+| Monorepo      | [Turborepo](https://turbo.build/repo)                                                                 |
+| Styling       | [Tailwind CSS v4](https://tailwindcss.com)                                                            |
 
 ## Project structure
 
@@ -98,6 +98,9 @@ bun run build        # Build all packages and apps
 bun run lint         # Run ESLint on all workspaces
 bun run typecheck    # Run TypeScript type checking
 bun run format       # Format code with Prettier
+bun run test         # Run Vitest unit tests
+bun run test:e2e     # Run Playwright E2E tests (headless)
+bun run test:e2e:ui  # Run Playwright E2E tests (UI mode)
 
 # Database (run from repo root)
 bun --filter @workspace/db generate   # Generate Drizzle migrations
@@ -179,6 +182,7 @@ docker compose up --build -d
 ```
 
 Services:
+
 - **web** → http://localhost:3000 (Next.js standalone)
 - **api** → http://localhost:3001 (Hono/Bun)
 - **postgres** → localhost:5432
@@ -194,16 +198,17 @@ bun --filter web build
 
 ### Environment variables
 
-| Variable               | Required | Description                                            |
-| ---------------------- | -------- | ------------------------------------------------------ |
-| `DATABASE_URL`         | ✅       | PostgreSQL connection string                           |
-| `BETTER_AUTH_SECRET`   | ✅       | 32+ char random string                                 |
-| `BETTER_AUTH_URL`      | ✅       | Public URL of API server                               |
-| `CLIENT_URL`           | ✅       | Frontend URL (for CORS)                                |
-| `PORT`                 |          | API server port (default 3001)                         |
-| `LOG_LEVEL`            |          | Winston log level (default "info")                     |
-| `EMAIL_PROVIDER`       |          | "console" \| "mailpit" \| "resend" (default "mailpit") |
-| `NEXT_PUBLIC_API_URL`  | ✅       | API URL for frontend client                            |
+| Variable              | Required | Description                                            |
+| --------------------- | -------- | ------------------------------------------------------ |
+| `DATABASE_URL`        | ✅       | PostgreSQL connection string                           |
+| `BETTER_AUTH_SECRET`  | ✅       | 32+ char random string                                 |
+| `BETTER_AUTH_URL`     | ✅       | Public URL of API server                               |
+| `CLIENT_URL`          | ✅       | Frontend URL (for CORS)                                |
+| `PORT`                |          | API server port (default 3001)                         |
+| `LOG_LEVEL`           |          | Winston log level (default "info")                     |
+| `EMAIL_PROVIDER`      |          | "console" \| "mailpit" \| "resend" (default "mailpit") |
+| `NEXT_PUBLIC_API_URL` | ✅       | API URL for frontend client                            |
+| `CSP_DIRECTIVES`      |          | Override Content-Security-Policy header                |
 
 ## Reference docs
 
