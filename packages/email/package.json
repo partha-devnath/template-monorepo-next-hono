@@ -16,7 +16,7 @@
     "resend": "^4.6.0"
   },
   "devDependencies": {
-    "@types/node": "^24",
+    "@types/node": "^26",
     "@types/nodemailer": "^8.0.1",
     "typescript": "~6"
   }

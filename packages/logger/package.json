@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "main": "./src/server.ts",
   "devDependencies": {
-    "@types/node": "^24",
+    "@types/node": "^26",
     "typescript": "~6"
   },
   "exports": {
